@@ -17,33 +17,30 @@ import static org.junit.Assert.assertEquals;
 public class LongestCommonPrefixTest {
 
     public String longestCommonPrefix(String[] strs) {
-
-        int minSize = 0;
-        for (int i = 0; i < strs.length; i++) {
-            int length = strs[i].length();
-            if (length < minSize) {
-                minSize = length;
-            }
-            if (i == 0) {
-                minSize = length;
-            }
-        }
-
-        String result = "";
-        char[] firstChars = strs[0].toCharArray();
-
-        for (int i = 0; i <= minSize - 1; i++) {
-            char c = firstChars[i];
-            for (int j = 0; j < strs.length; j++) {
-                char c1 = strs[j].toCharArray()[i];
+        String firstString = strs[0];
+        int idx = 0;
+        for (int i = 0; i < firstString.length(); i++) {
+            char c = firstString.charAt(i);
+            for (String str : strs) {
+                if (i > str.length() - 1) {
+                    return getResult(firstString, idx);
+                }
+                char c1 = str.charAt(i);
                 if (c != c1) {
-                    return result;
+                    return getResult(firstString, idx);
                 }
             }
-            result += c;
+            idx = i + 1;
         }
+        return getResult(firstString, idx);
+    }
 
-        return result;
+    private String getResult(String str, int idx) {
+        if (idx == 0) {
+            return "";
+        } else {
+            return str.substring(0, idx);
+        }
     }
 
     @Test
