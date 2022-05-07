@@ -33,22 +33,20 @@ public class ValidParenthesesTest {
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
 
-            if (i == 0) {
+            if (c == '(' || c == '[' || c == '{') {
                 stack.push(c);
-                continue;
-            }
-            if (stack.isEmpty()) {
-                stack.push(c);
-                continue;
-            }
-
-            char preChar = stack.peek();
-            if ((preChar == '(' && ')' == c)
-                || (preChar == '[' && ']' == c)
-                || (preChar == '{' && '}' == c)) {
-                stack.pop();
             } else {
-                stack.push(c);
+                if (stack.isEmpty()) {
+                    return false;
+                }
+                char top = stack.pop();
+                if (c == ')' && top != '(') {
+                    return false;
+                } else if (c == ']' && top != '[') {
+                    return false;
+                } else if (c == '}' && top != '{') {
+                    return false;
+                }
             }
         }
         return stack.isEmpty();
