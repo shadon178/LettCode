@@ -54,41 +54,67 @@ public class MergeTwoSortedListsTest {
     }
 
     public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        ListNode node = null;
-        do {
-            System.out.println("before node: " + node);
+        ListNode rootNode = null;
+        ListNode parentNode = null;
+
+        if (list1 == null && list2 == null) {
+            return null;
+        }
+
+        int i = 0;
+        while (list1 != null && list2 != null) {
             if (list1.val < list2.val) {
-                if (node == null) {
-                    node = list1;
-                    node.next = null;
-                } else {
-                    node.next = list1;
-                    node.next.next = null;
+                ListNode curNode = new ListNode(list1.val);
+                if (parentNode != null) {
+                    parentNode.next = curNode;
                 }
+                parentNode = curNode;
                 list1 = list1.next;
-
             } else {
-
-                if (node == null) {
-                    node = list2;
-                    node.next = null;
-                } else {
-                    node.next = list2;
-                    node.next.next = null;
+                ListNode curNode = new ListNode(list2.val);
+                if (parentNode != null) {
+                    parentNode.next = curNode;
                 }
+                parentNode = curNode;
                 list2 = list2.next;
             }
-            System.out.println("after node: " + node);
-        } while (list1 != null && list2 != null);
+
+            if (i == 0) {
+                rootNode = parentNode;
+            }
+            ++ i;
+        }
 
         if (list1 == null) {
-            node.next = list2;
+            while (list2 != null) {
+                ListNode curNode = new ListNode(list2.val);
+                if (parentNode != null) {
+                    parentNode.next = curNode;
+                }
+                parentNode = curNode;
+                list2 = list2.next;
+                if (i == 0) {
+                    rootNode = parentNode;
+                }
+                ++ i;
+            }
         }
 
         if (list2 == null) {
-            node.next = list1;
+            while (list1 != null) {
+                ListNode curNode = new ListNode(list1.val);
+                if (parentNode != null) {
+                    parentNode.next = curNode;
+                }
+                parentNode = curNode;
+                list1 = list1.next;
+                if (i == 0) {
+                    rootNode = parentNode;
+                }
+                ++ i;
+            }
         }
-        return node;
+        return rootNode;
     }
 
     @Test
@@ -113,7 +139,7 @@ public class MergeTwoSortedListsTest {
         );
 
 
-        /*list1 = null;
+        list1 = null;
         list2 = null;
         Assert.assertArrayEquals(
             new int[]{},
@@ -125,16 +151,32 @@ public class MergeTwoSortedListsTest {
         Assert.assertArrayEquals(
             new int[]{0},
             listNode2Arrays(test.mergeTwoLists(list1, list2))
-        );*/
+        );
 
+        list1 = new ListNode(-9);
+        list1.next = new ListNode(3);
+
+        list2 = new ListNode(5);
+        list2.next = new ListNode(7);
+        Assert.assertArrayEquals(
+            new int[]{-9,3,5,7},
+            listNode2Arrays(test.mergeTwoLists(list1, list2))
+        );
+
+        list1 = new ListNode(-10);
+        list1.next = new ListNode(-6);
+        list2 = null;
+        Assert.assertArrayEquals(
+            new int[]{-10, -6},
+            listNode2Arrays(test.mergeTwoLists(list1, list2))
+        );
     }
 
     public int[] listNode2Arrays(ListNode listNode) {
         List<Integer> list = new ArrayList<>();
-        ListNode node = listNode;
         while (listNode != null) {
-            list.add(node.val);
-            node = listNode.next;
+            list.add(listNode.val);
+            listNode = listNode.next;
         }
         return list.stream().mapToInt(i -> i).toArray();
     }
