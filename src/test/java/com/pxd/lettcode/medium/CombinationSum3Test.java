@@ -64,7 +64,6 @@ public class CombinationSum3Test {
                 Arrays.asList(2, 3, 4)
             )
         );
-
         assertThat(combinationSum3(4, 1), IsEmptyCollection.empty());
     }
 
